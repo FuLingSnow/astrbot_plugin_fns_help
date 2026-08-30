@@ -1,0 +1,6 @@
+name: astrbot_plugin_fns_help
+display_name: 有哪些命令呢
+desc: 返回所有插件指令，可diy展示插件名称与是否显示
+version: v1.0.1
+author: FuLingSnow
+repo: https://github.com/FuLingSnow/astrbot_plugin_fns_help
