@@ -15,7 +15,7 @@ PLUGIN_NAME = "astrbot_plugin_fns_help"
 
 
 @register(
-    "fns_help", "FuLingSnow", "返回所有插件指令，可diy展示插件名称与是否显示", "v1.0.1"
+    "fns_help", "FuLingSnow", "返回所有插件指令，可diy展示插件名称与是否显示", "v1.0.2"
 )
 class FnHelpPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
