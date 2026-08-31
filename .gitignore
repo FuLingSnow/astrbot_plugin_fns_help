@@ -1,12 +1,4 @@
-# ========== 提交插件仓库时请排除以下非必需文件 ==========
-
-# 仓库规范文档（本地开发参考，不随仓库分发）
-PLUGIN_REPO_STANDARD.md
-
-# Git 内部目录（git 本身不追踪，但打包上传时请勿带上）
 .git/
-
-# Python 字节码与构建产物
 __pycache__/
 *.py[cod]
 *$py.class
@@ -14,34 +6,23 @@ __pycache__/
 .eggs/
 build/
 dist/
-
-# 虚拟环境
 .venv/
 venv/
 env/
 ENV/
-
-# Node（若存在）
 node_modules/
-
-# IDE / 开发用配置文件
 .idea/
 .vscode/
 *.iml
 *.code-workspace
-
-# 环境变量 / 密钥（切勿提交）
 .env
 .env.*
 *.local
-
-# 测试与缓存
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 .coverage
 htmlcov/
-
-# 系统文件
 .DS_Store
 Thumbs.db
+ruff.toml

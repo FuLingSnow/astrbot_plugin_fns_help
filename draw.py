@@ -2,18 +2,19 @@ import os
 from typing import Any
 
 import aiohttp
-
 from astrbot.api import logger
 from astrbot.core.config.astrbot_config import AstrBotConfig
 
 
+class HelpDrawError(Exception):
+    pass
+
+
 class AstrBotHelpDrawer:
-    # ---------------- 构造函数 ----------------
     def __init__(self, config: AstrBotConfig) -> None:
         self.config = config
         self._load_template()
 
-    # ---------------- 模板加载 ----------------
     def _load_template(self) -> None:
         """加载 HTML 模板"""
         template_path = os.path.join(os.path.dirname(__file__), "help_template.html")
@@ -23,11 +24,12 @@ class AstrBotHelpDrawer:
             logger.info("成功加载 HTML 模板")
         except Exception as e:
             logger.error(f"加载 HTML 模板失败: {e}")
-            raise e
+            raise
 
-    # ---------------- 文本解析 ----------------
     @staticmethod
-    def _parse_single_command_list(text_list: str | list[str]) -> list[tuple[str, str | None]]:
+    def _parse_single_command_list(
+        text_list: str | list[str],
+    ) -> list[tuple[str, str | None]]:
         """解析命令文本列表，支持 " : "、" # "、"#"、":" 分隔描述"""
         commands = []
         lines = (
@@ -42,7 +44,7 @@ class AstrBotHelpDrawer:
             if not stripped or (stripped.startswith("[") and stripped.endswith("]")):
                 continue
             # 缩进行视为上一条命令描述的续行
-            if (raw.startswith("  ") or raw.startswith("\t")) and commands:
+            if raw.startswith(("  ", "\t")) and commands:
                 cmd, desc = commands[-1]
                 commands[-1] = (cmd, (desc or "") + stripped)
                 continue
@@ -103,7 +105,6 @@ class AstrBotHelpDrawer:
 
         return result
 
-    # ---------------- T2I 模板生成 ----------------
     def _build_sections_data(self, plugin_commands_dict: dict[str, Any]) -> list[dict]:
         """将命令字典转换为模板需要的数据结构"""
         sections = self._parse_plugin_commands_sorted_grouped(plugin_commands_dict)
@@ -126,34 +127,40 @@ class AstrBotHelpDrawer:
         except (ImportError, AttributeError):
             return ""
 
-    async def draw_help_image_with_t2i(self, plugin_commands_dict: dict[str, Any], star_instance) -> bytes:
+    async def draw_help_image_with_t2i(
+        self, plugin_commands_dict: dict[str, Any], star_instance
+    ) -> bytes:
         """使用 HTML 模板生成帮助图片"""
         if not self.template_html:
-            raise Exception("HTML 模板未加载")
+            raise HelpDrawError("HTML 模板未加载")
 
         sections_data = self._build_sections_data(plugin_commands_dict)
         data = {
             "sections": sections_data,
             "version": self._get_astrbot_version(),
             "header_title": getattr(self.config, "header_title", "悠水小筑 · 七七"),
-            "footer_text": getattr(self.config, "footer_text", "✨ 悠水小筑 | 持续更新中 ✨"),
+            "footer_text": getattr(
+                self.config, "footer_text", "✨ 悠水小筑 | 持续更新中 ✨"
+            ),
         }
 
         logger.info(f"正在使用 T2I 模板生成帮助图片，包含 {len(sections_data)} 个分组")
 
-        image_url = await star_instance.html_render(self.template_html, data, options={
-            "full_page": True,
-            "type": "png",
-            "quality": 90,
-            "viewport": {"width": 1080, "height": 1920}
-        })
+        image_url = await star_instance.html_render(
+            self.template_html,
+            data,
+            options={
+                "full_page": True,
+                "type": "png",
+                "quality": 90,
+                "viewport": {"width": 1080, "height": 1920},
+            },
+        )
 
         # 从 URL 下载图片并返回 bytes
-        async with aiohttp.ClientSession() as session:
-            async with session.get(image_url) as resp:
-                if resp.status == 200:
-                    image_data = await resp.read()
-                    logger.info(f"T2I 图片生成成功，大小: {len(image_data)} bytes")
-                    return image_data
-                else:
-                    raise Exception(f"下载图片失败，状态码: {resp.status}")
+        async with aiohttp.ClientSession() as session, session.get(image_url) as resp:
+            if resp.status == 200:
+                image_data = await resp.read()
+                logger.info(f"T2I 图片生成成功，大小: {len(image_data)} bytes")
+                return image_data
+            raise HelpDrawError(f"下载图片失败，状态码: {resp.status}")

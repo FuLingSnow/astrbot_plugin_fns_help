@@ -27,13 +27,14 @@
 - [配置](#配置)
 - [目录结构](#目录结构)
 - [注意事项](#注意事项)
+- [更新记录](#更新记录)
 - [开源许可](#开源许可)
 
 ## 简介
 
 发送 `/helps`（或「帮助」「菜单」「功能」）即可获得一张帮助图片，展示所有已激活插件的全部命令，支持 DIY 插件显示名称与是否显示。
 
-## ⚠️ 修改声明
+## 修改声明
 
 本插件基于 [tinkerbellqwq/astrbot_plugin_help](https://github.com/tinkerbellqwq/astrbot_plugin_help) 修改而来，自 v1.0.0 起**独立维护**，与原项目无依赖关系。
 
@@ -123,6 +124,11 @@ astrbot_plugin_fns_help/
 - 正则 / 监听器命令无法自动检测，请通过 `custom_cmds` 手动补充
 - 修改配置保存后 AstrBot 会自动重载插件并应用新参数
 - 帮助图片通过 AstrBot 的 T2I 服务渲染
+
+## 更新记录
+
+- **v1.0.1**：更新版本号
+- **v1.0.0**：首个版本，基于 [tinkerbellqwq/astrbot_plugin_help](https://github.com/tinkerbellqwq/astrbot_plugin_help) 修改，开始独立维护
 
 ## 开源许可
 

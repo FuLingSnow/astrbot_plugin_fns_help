@@ -1,13 +1,13 @@
 import collections
 
-from astrbot.api.event import filter, AstrMessageEvent
-from astrbot.api.star import Context, Star, register
 from astrbot.api import logger
+from astrbot.api.event import AstrMessageEvent, filter
+from astrbot.api.star import Context, Star, register
 from astrbot.core.config.astrbot_config import AstrBotConfig
 from astrbot.core.message.components import Image
 from astrbot.core.star.filter.command import CommandFilter
 from astrbot.core.star.filter.command_group import CommandGroupFilter
-from astrbot.core.star.star_handler import star_handlers_registry, StarHandlerMetadata
+from astrbot.core.star.star_handler import StarHandlerMetadata, star_handlers_registry
 
 from .draw import AstrBotHelpDrawer
 
@@ -79,7 +79,9 @@ class FnHelpPlugin(Star):
             return {}
 
         # 按模块路径预索引所有处理器，避免每个插件全量遍历注册表
-        handlers_by_module: dict[str, list[StarHandlerMetadata]] = collections.defaultdict(list)
+        handlers_by_module: dict[str, list[StarHandlerMetadata]] = (
+            collections.defaultdict(list)
+        )
         for handler in star_handlers_registry:
             if isinstance(handler, StarHandlerMetadata):
                 handlers_by_module[handler.handler_module_path].append(handler)
@@ -99,7 +101,11 @@ class FnHelpPlugin(Star):
                 continue
             plugin_instance = getattr(star, "star_cls", None)
             module_path = getattr(star, "module_path", None)
-            if not plugin_name or not module_path or not isinstance(plugin_instance, Star):
+            if (
+                not plugin_name
+                or not module_path
+                or not isinstance(plugin_instance, Star)
+            ):
                 logger.warning(
                     f"插件 '{plugin_name}' (模块: {module_path}) 的元数据无效或不完整，已跳过。"
                 )

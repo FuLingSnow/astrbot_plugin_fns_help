@@ -1,16 +1,10 @@
-# 统一行尾为 LF，跨平台协作
 * text=auto eol=lf
-
-# 二进制资源：不进行行尾/文本转换
 *.jpg binary
 *.png binary
 *.otf binary
 *.zip binary
-
-# git archive 导出/生成安装包时排除（减小体积）
 .gitignore export-ignore
 .gitattributes export-ignore
-PLUGIN_REPO_STANDARD.md export-ignore
 .idea/ export-ignore
 .vscode/ export-ignore
 __pycache__/ export-ignore
