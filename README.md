@@ -11,7 +11,7 @@
 <div align="center">
 
 ![AstrBot](https://img.shields.io/badge/AstrBot-v4.x-blue)
-![Version](https://img.shields.io/badge/version-v1.0.1-blue)
+![Version](https://img.shields.io/badge/version-v1.0.2-blue)
 ![License](https://img.shields.io/badge/license-AGPL--3.0-red)
 
 </div>
@@ -127,6 +127,7 @@ astrbot_plugin_fns_help/
 
 ## 更新记录
 
+- **v1.0.2**：更新版本号
 - **v1.0.1**：更新版本号
 - **v1.0.0**：首个版本，基于 [tinkerbellqwq/astrbot_plugin_help](https://github.com/tinkerbellqwq/astrbot_plugin_help) 修改，开始独立维护
 
